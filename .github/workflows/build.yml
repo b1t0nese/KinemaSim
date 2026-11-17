@@ -33,25 +33,27 @@ jobs:
       - name: Run engine self-tests
         run: python tests/test_engine.py
 
-      - name: Build onefile app
+      - name: Build onefile app + dmg
         run: |
           pyinstaller --noconfirm --clean --onefile --windowed --name KinemaSim \
             --add-data "src/interface_module/uis:interface_module/uis" \
             --add-data "src/resources:resources" \
             src/main.py
-          zip -r KinemaSim-macOS.zip dist/KinemaSim.app
+          # .app — это папка, в releases можно класть только файлы → стандартный dmg
+          hdiutil create -volname "KinemaSim" -srcfolder dist/KinemaSim.app \
+            -ov -format UDZO KinemaSim.dmg
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: KinemaSim-macOS
-          path: KinemaSim-macOS.zip
+          path: KinemaSim.dmg
 
       - name: Attach to release (on tag)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: KinemaSim-macOS.zip
+          files: KinemaSim.dmg
           generate_release_notes: true
 
   build-windows:

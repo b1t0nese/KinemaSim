@@ -31,4 +31,10 @@ build_env/bin/pyinstaller \
     src/main.py
 
 echo
-echo "✓ Готово: $(cd dist && pwd)/KinemaSim.app"
+echo "Packing dmg..."
+
+hdiutil create -volname "KinemaSim" -srcfolder dist/KinemaSim.app \
+    -ov -format UDZO dist/KinemaSim.dmg
+
+echo
+echo "✓ Готово: $(cd dist && pwd)/KinemaSim.app и dist/KinemaSim.dmg"

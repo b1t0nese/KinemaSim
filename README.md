@@ -83,7 +83,8 @@ KinemaSim/
 
 ## Сборка (onefile)
 
-- **macOS**: `scripts/build_macos.sh` → `dist/KinemaSim.app`
+- **macOS**: `scripts/build_macos.sh` → `dist/KinemaSim.app` + `dist/KinemaSim.dmg`
+  (.app — это папка-бандл, поэтому в GitHub Releases macOS-билд лежит как .dmg)
 - **Windows**: `scripts/build_windows.bat` на любой Windows-машине → `dist/KinemaSim.exe`
 - **Windows без машины**: GitHub Actions из `.github/workflows/build.yml` —
   пуш в репозиторий, артефакт `KinemaSim-windows` в Actions. PyInstaller не умеет
