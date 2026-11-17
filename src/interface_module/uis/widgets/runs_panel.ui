@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RunsPanel</class>
+ <widget class="QWidget" name="RunsPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="runs_panel_layout">
+   <property name="spacing"><number>6</number></property>
+   <property name="leftMargin"><number>0</number></property>
+   <property name="topMargin"><number>0</number></property>
+   <property name="rightMargin"><number>0</number></property>
+   <property name="bottomMargin"><number>0</number></property>
+   <item>
+    <widget class="QGroupBox" name="group_runs">
+     <property name="title">
+      <string>История запусков</string>
+     </property>
+     <layout class="QVBoxLayout" name="runs_box_layout">
+      <property name="spacing"><number>6</number></property>
+      <item>
+       <widget class="QTableWidget" name="table_runs">
+        <property name="toolTip">
+         <string>Галочка слева — показывать траекторию на графике. Клик по строке — выбрать запуск для графиков и таблицы данных.</string>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="runs_buttons_row">
+        <item>
+         <widget class="QPushButton" name="btn_delete_run">
+          <property name="toolTip">
+           <string>Убрать выбранный запуск из истории</string>
+          </property>
+          <property name="text">
+           <string>✕ Убрать выбранный</string>
+          </property>
+          <property name="danger" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_clear_runs">
+          <property name="text">
+           <string>🗑 Очистить</string>
+          </property>
+          <property name="danger" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

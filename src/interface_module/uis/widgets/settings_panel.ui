@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsPanel</class>
+ <widget class="QWidget" name="SettingsPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>300</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="settings_panel_layout">
+   <property name="spacing"><number>10</number></property>
+   <property name="leftMargin"><number>4</number></property>
+   <property name="topMargin"><number>4</number></property>
+   <property name="rightMargin"><number>4</number></property>
+   <property name="bottomMargin"><number>4</number></property>
+   <item>
+    <layout class="QVBoxLayout" name="header_layout">
+     <property name="spacing"><number>0</number></property>
+     <item>
+      <widget class="QLabel" name="label_app_title">
+       <property name="text">
+        <string>🎯 KinemaSim</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_app_subtitle">
+       <property name="text">
+        <string>симулятор кинематики: от камня до пули</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_preset">
+     <property name="title">
+      <string>Пресет</string>
+     </property>
+     <layout class="QFormLayout" name="preset_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_preset">
+        <property name="text">
+         <string>Снаряд:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_preset">
+        <property name="toolTip">
+         <string>Готовые снаряды: от брошенного камня до пули снайперской винтовки</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_environment">
+        <property name="text">
+         <string>Среда:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="combo_environment">
+        <property name="toolTip">
+         <string>Гравитация и атмосфера: Земля, Луна, Марс и другие</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_launch">
+     <property name="title">
+      <string>Параметры запуска</string>
+     </property>
+     <layout class="QFormLayout" name="launch_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_speed">
+        <property name="text">
+         <string>Скорость:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="spin_speed">
+        <property name="toolTip">
+         <string>Начальная скорость снаряда</string>
+        </property>
+        <property name="suffix">
+         <string> м/с</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>3000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>25.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_angle">
+        <property name="text">
+         <string>Угол:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_angle">
+        <property name="toolTip">
+         <string>Угол броска к горизонту</string>
+        </property>
+        <property name="suffix">
+         <string> °</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>90.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>45.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_height">
+        <property name="text">
+         <string>Высота:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spin_height">
+        <property name="toolTip">
+         <string>Начальная высота над землёй</string>
+        </property>
+        <property name="suffix">
+         <string> м</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_projectile">
+     <property name="title">
+      <string>Снаряд</string>
+     </property>
+     <layout class="QFormLayout" name="projectile_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_mass">
+        <property name="text">
+         <string>Масса:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="spin_mass">
+        <property name="toolTip">
+         <string>Масса снаряда</string>
+        </property>
+        <property name="suffix">
+         <string> кг</string>
+        </property>
+        <property name="decimals">
+         <number>4</number>
+        </property>
+        <property name="minimum">
+         <double>0.000100000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.450000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_diameter">
+        <property name="text">
+         <string>Диаметр:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_diameter">
+        <property name="toolTip">
+         <string>Диаметр снаряда (для площади сечения); снаряд считается шаром</string>
+        </property>
+        <property name="suffix">
+         <string> м</string>
+        </property>
+        <property name="decimals">
+         <number>4</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.220000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_drag">
+        <property name="text">
+         <string>Cd:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spin_drag">
+        <property name="toolTip">
+         <string>Коэффициент лобового сопротивления (шар ≈ 0.47, пуля ≈ 0.25)</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>2.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.250000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_spin">
+        <property name="text">
+         <string>Вращение:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="spin_spin_rpm">
+        <property name="toolTip">
+         <string>Вращение снаряда: больше 0 — backspin (подъёмная сила вверх), меньше 0 — topspin (вниз)</string>
+        </property>
+        <property name="suffix">
+         <string> об/мин</string>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>-10000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_environment">
+     <property name="title">
+      <string>Окружение</string>
+     </property>
+     <layout class="QFormLayout" name="environment_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_gravity">
+        <property name="text">
+         <string>Гравитация:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="spin_gravity">
+        <property name="toolTip">
+         <string>Ускорение свободного падения</string>
+        </property>
+        <property name="suffix">
+         <string> м/с²</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>50.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>9.810000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_air_density">
+        <property name="text">
+         <string>Плотность:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_air_density">
+        <property name="toolTip">
+         <string>Плотность воздуха у земли (0 — вакуум); выше — убывает экспоненциально</string>
+        </property>
+        <property name="suffix">
+         <string> кг/м³</string>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="maximum">
+         <double>3.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.005000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.225000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_scale_height">
+        <property name="text">
+         <string>Масштаб атм.:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spin_scale_height">
+        <property name="toolTip">
+         <string>Высота однородной атмосферы: за эту высоту плотность падает в e ≈ 2.72 раза</string>
+        </property>
+        <property name="suffix">
+         <string> км</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>8.400000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_wind">
+        <property name="text">
+         <string>Ветер:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="spin_wind">
+        <property name="toolTip">
+         <string>Скорость ветра: больше 0 — попутный (по X), меньше 0 — встречный</string>
+        </property>
+        <property name="suffix">
+         <string> м/с</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-100.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_model">
+     <property name="title">
+      <string>Физическая модель</string>
+     </property>
+     <layout class="QFormLayout" name="model_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_integrator">
+        <property name="text">
+         <string>Интегратор:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_integrator">
+        <property name="toolTip">
+         <string>Численный метод решения уравнений движения</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_dt">
+        <property name="text">
+         <string>Шаг Δt:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_dt">
+        <property name="toolTip">
+         <string>Шаг интегрирования (меньше — точнее, но медленнее)</string>
+        </property>
+        <property name="suffix">
+         <string> с</string>
+        </property>
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>0.000010000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.000100000000000</double>
+        </property>
+        <property name="value">
+         <double>0.001000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_max_time">
+        <property name="text">
+         <string>Предел времени:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spin_max_time">
+        <property name="toolTip">
+         <string>Симуляция остановится по прошествии этого времени</string>
+        </property>
+        <property name="suffix">
+         <string> с</string>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>600.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>120.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_auto_dt">
+        <property name="toolTip">
+         <string>Подбирать шаг автоматически: снаряд смещается не более чем на 1/30 диаметра за шаг</string>
+        </property>
+        <property name="text">
+         <string>Автоматический Δt</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_drag">
+        <property name="text">
+         <string>Сопротивление воздуха</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_magnus">
+        <property name="toolTip">
+         <string>Подъёмная сила от вращения снаряда (эффект Магнуса)</string>
+        </property>
+        <property name="text">
+         <string>Эффект Магнуса</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_buoyancy">
+        <property name="toolTip">
+         <string>Выталкивающая сила воздуха (заметна только для очень лёгких снарядов)</string>
+        </property>
+        <property name="text">
+         <string>Сила Архимеда</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_bounces">
+        <property name="text">
+         <string>Отскоки от земли</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_restitution">
+        <property name="text">
+         <string>Упругость:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QDoubleSpinBox" name="spin_restitution">
+        <property name="toolTip">
+         <string>Коэффициент восстановления: доля вертикальной скорости, сохраняющаяся при отскоке</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.990000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.050000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="group_target">
+     <property name="title">
+      <string>Цель</string>
+     </property>
+     <layout class="QFormLayout" name="target_form">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="cb_target">
+        <property name="text">
+         <string>Вертикальная мишень</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_target_distance">
+        <property name="text">
+         <string>Дистанция:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_target_distance">
+        <property name="suffix">
+         <string> м</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.500000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_target_height">
+        <property name="text">
+         <string>Высота центра:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spin_target_height">
+        <property name="suffix">
+         <string> м</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-100.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_target_size">
+        <property name="text">
+         <string>Размер:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="spin_target_size">
+        <property name="suffix">
+         <string> м</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_run">
+     <property name="toolTip">
+      <string>Запустить симуляцию (Enter)</string>
+     </property>
+     <property name="text">
+      <string>🚀 Запустить</string>
+     </property>
+     <property name="shortcut">
+      <string>Return</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="config_buttons_row">
+     <item>
+      <widget class="QPushButton" name="btn_save_config">
+       <property name="toolTip">
+        <string>Сохранить текущие настройки в JSON-файл</string>
+       </property>
+       <property name="text">
+        <string>💾 Настройки</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_load_config">
+       <property name="toolTip">
+        <string>Загрузить настройки из JSON-файла</string>
+       </property>
+       <property name="text">
+        <string>📂 Загрузить</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="settings_bottom_spacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>24</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
