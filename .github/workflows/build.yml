@@ -9,6 +9,12 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+permissions:
+  contents: write   # создание Release и загрузка ассетов по тегу
+
+env:
+  PYTHONIOENCODING: utf-8   # Windows-консоль cp1252 не умеет ✓ и кириллицу
+
 jobs:
   build-macos:
     runs-on: macos-latest
