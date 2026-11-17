@@ -496,7 +496,7 @@
       <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="cb_auto_dt">
         <property name="toolTip">
-         <string>Подбирать шаг автоматически: снаряд смещается не более чем на 1/30 диаметра за шаг</string>
+         <string>Подбирать шаг автоматически: снаряд смещается не более чем на 1/40 диаметра за шаг (не мельче 100 мкс)</string>
         </property>
         <property name="text">
          <string>Автоматический Δt</string>

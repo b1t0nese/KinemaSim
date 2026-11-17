@@ -3,27 +3,61 @@
 
 import argparse
 import json
-import time
 import sys
+import time
 
+from PySide6.QtCore import QObject, QThread, QMetaObject, Qt, Signal, Slot
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
 from interface_module.window import MainWindowUI
+from physics.config import SimulationConfig
 from physics.engine import simulate
 from ui_loader import resource_path
 
 APP_NAME = "KinemaSim"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 CONFIG_EXTENSION = ".kinemasim.json"
 
 
-class App:
-    """Оркестрация: окно + действия с файлами, сама симуляция — по сигналу окна."""
+class SimulationWorker(QObject):
+    """Симуляция в фоне: чистый Python занял бы главный поток и заморозил окно.
+    Живёт в собственном потоке всю сессию, запуски приходят через invokeMethod."""
+    finished = Signal(object)
+    failed = Signal(str)
+
+    def __init__(self):
+        super().__init__()
+        self.config: SimulationConfig | None = None
+        self.started_at = 0.0
+
+    @Slot()
+    def run(self):
+        try:
+            result = simulate(self.config)
+            self.finished.emit(result)
+        except Exception as e:
+            self.failed.emit(f"{type(e).__name__}: {e}")
+
+
+class App(QObject):
+    """Оркестрация: окно + действия с файлами, сама симуляция — по сигналу окна.
+
+    Наследуется от QObject, чтобы сигналы воркера приходили в главный поток
+    (AutoConnection), а не исполнялись внутри потока расчёта."""
 
     def __init__(self, config_path: str | None=None):
+        super().__init__()
         self.appApplication: QApplication | None = None
         self.windowUI: MainWindowUI | None = None
         self.run_counter = 0
+
+        self.sim_worker = SimulationWorker()
+        self.sim_thread = QThread()
+        self.sim_worker.moveToThread(self.sim_thread)
+        self.sim_worker.finished.connect(self.on_simulation_finished)
+        self.sim_worker.failed.connect(self.on_simulation_failed)
+        self.sim_thread.start()
+        self._sim_busy = False
 
         self.windowUI = MainWindowUI()
         self.init_window()
@@ -39,6 +73,7 @@ class App:
         w.action_export_png.triggered.connect(w.export_png)
         w.action_about.triggered.connect(self.show_about)
         w.btn_export_csv.clicked.connect(self.export_csv)
+        w.closeEvent = self.close_application
 
     def start(self, qapp: QApplication):
         log_prefix = f"[{APP_NAME}]"
@@ -55,12 +90,21 @@ class App:
     # ─── Симуляция ───────────────────────────────────────────────────
 
     def run_simulation(self):
-        """Собирает настройки из окна, считает полёт и добавляет его в историю."""
-        config = self.windowUI.settings_panel.collect_config()
-        started = time.perf_counter()
-        result = simulate(config)
-        elapsed_ms = (time.perf_counter() - started) * 1000
+        """Собирает настройки из окна и запускает расчёт в фоновом потоке."""
+        if self._sim_busy:
+            return  # предыдущий расчёт ещё идёт
+        self._sim_busy = True
+        self.sim_worker.config = self.windowUI.settings_panel.collect_config()
+        self.sim_worker.started_at = time.perf_counter()
+        self.windowUI.settings_panel.btn_run.setEnabled(False)
+        self.windowUI.statusBar().showMessage("⏳ Считаю симуляцию…")
+        QMetaObject.invokeMethod(self.sim_worker, "run", Qt.ConnectionType.QueuedConnection)
 
+    def on_simulation_finished(self, result):
+        self._sim_busy = False
+        self.windowUI.settings_panel.btn_run.setEnabled(True)
+
+        elapsed_ms = (time.perf_counter() - self.sim_worker.started_at) * 1000
         self.run_counter += 1
         preset_name = self.windowUI.settings_panel.combo_preset.currentText()
         if preset_name == "— вручную —":
@@ -74,6 +118,25 @@ class App:
             f"✓ {result.status.lower()}: {len(result.t):,} шагов за {elapsed_ms:.0f} мс — "
             f"дальность {r['range']:.1f} м, высота {r['max_height']:.1f} м, "
             f"время {r['flight_time']:.2f} с".replace(",", " "))
+
+    def on_simulation_failed(self, message: str):
+        self._sim_busy = False
+        self.windowUI.settings_panel.btn_run.setEnabled(True)
+        self.windowUI.statusBar().showMessage(f"✗ Ошибка симуляции: {message}")
+        QMessageBox.warning(self.windowUI, "Ошибка симуляции", message)
+
+    def close_application(self, event):
+        if self._sim_busy:  # даём фоновому расчёту доделать, окно остаётся живым
+            self.windowUI.statusBar().showMessage("⏳ Дожимаю расчёт перед выходом…")
+            deadline = time.time() + 30
+            while self._sim_busy and time.time() < deadline:
+                QApplication.processEvents()
+                time.sleep(0.05)
+        self.sim_thread.quit()
+        self.sim_thread.wait(5000)
+        self.sim_thread.deleteLater()
+        self.sim_worker.deleteLater()
+        event.accept()
 
     # ─── Файлы: настройки и экспорт ──────────────────────────────────
 
@@ -98,7 +161,6 @@ class App:
                 f"KinemaSim settings (*{CONFIG_EXTENSION});;JSON (*.json)")
         if not path:
             return
-        from physics.config import SimulationConfig
         try:
             with open(path, "r", encoding="utf-8") as f:
                 config = SimulationConfig.from_dict(json.load(f))

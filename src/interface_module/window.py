@@ -19,8 +19,17 @@ from .chart import ChartWidget
 
 RUN_COLORS = ["#5b8cff", "#ff6b6b", "#3ecf8e", "#ffd166", "#c792ea", "#4dd0e1",
               "#ff9f43", "#7bed9f", "#ff7ab6", "#95de64", "#64b5f6", "#f06292"]
-MAX_TABLE_ROWS = 3000
+MAX_TABLE_ROWS = 1000
+RENDER_POINT_LIMIT = 3000   # прореживание для отрисовки: полные данные — только в CSV/физике
 CUSTOM_PRESET = "— вручную —"
+
+
+def _decimate(values: list, stride: int) -> list:
+    """Каждая stride-я точка + всегда последняя (чтобы кривая доходила до конца)."""
+    result = values[::stride]
+    if result and result[-1] is not values[-1]:
+        result = result + [values[-1]]
+    return result
 
 
 @contextmanager
@@ -530,10 +539,12 @@ class MainWindowUI(QMainWindow):
                 continue
             active = record is self.runs_panel.active()
             result = record.result
+            stride = max(1, len(result.t) // RENDER_POINT_LIMIT)
             series.append({
-                "points": list(zip(result.x, result.y)),
+                "points": list(zip(_decimate(result.x, stride), _decimate(result.y, stride))),
                 "color": record.color, "width": 2.6 if active else 1.8,
-                "name": record.name, "pickable": active, "time": result.t,
+                "name": record.name, "pickable": active,
+                "time": _decimate(result.t, stride),
             })
             if active:
                 markers.append({"x": result.results["apogee_distance"],
@@ -563,16 +574,23 @@ class MainWindowUI(QMainWindow):
         self._update_cursor()
 
     def _update_analysis_charts(self):
-        """Четыре графика: высота, скорость, энергия, ускорение — по времени."""
+        """Четыре графика: высота, скорость, энергия, ускорение — по времени.
+        Считаются только по прореженным точкам ( RENDER_POINT_LIMIT ), иначе
+        пульные запуски с сотнями тысяч шагов рисуются секундами."""
         chart_series = {}
         for record in self.runs_panel.records:
             if not record.visible:
                 continue
             result = record.result
-            t, y, vx, vy = result.t, result.y, result.vx, result.vy
             mass, g = result.config.mass, result.config.gravity
-            speeds = [hypot(vx[i], vy[i]) for i in range(len(t))]
-            accels = [hypot(result.ax[i], result.ay[i]) for i in range(len(t))]
+            stride = max(1, len(result.t) // RENDER_POINT_LIMIT)
+            t = _decimate(result.t, stride)
+            y = _decimate(result.y, stride)
+            speeds = [hypot(result.vx[i], result.vy[i]) for i in range(0, len(result.t), stride)]
+            accels = [hypot(result.ax[i], result.ay[i]) for i in range(0, len(result.t), stride)]
+            if len(speeds) < len(t):
+                speeds.append(result.speed_at(-1))
+                accels.append(hypot(result.ax[-1], result.ay[-1]))
             active = record is self.runs_panel.active()
             base = {"color": record.color, "width": 2.4 if active else 1.6, "name": record.name}
             chart_series.setdefault("h", []).append({**base, "points": list(zip(t, y))})
